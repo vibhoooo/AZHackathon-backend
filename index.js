@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/users", require("./routes/userRoutes"));
 app.use("/lobbies", require("./routes/lobbyRoutes"));
+app.use("/games", require("./routes/gameRoutes"));
 app.use(errorHandler);
 const io = init(server);
 io.on("connection", (socket) => {
