@@ -49,6 +49,19 @@ const mcqSchema = mongoose.Schema(
 				true,
 				"Please enter lobby id!"
 			]
+		},
+		qoptions: {
+			type: [String],
+			required: [
+				true,
+				"Please enter 4 options for the question!"
+			],
+			validate: {
+				validator: function (v) {
+					return v.length === 4;
+				},
+				message: "Exactly 4 options are required!"
+			}
 		}
 	},
 	{
