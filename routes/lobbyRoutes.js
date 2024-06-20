@@ -26,7 +26,7 @@ router.route(
 router.route(
 	"/listLobby"
 ).get(
-	// validateTokenHandlerUser,
+	validateTokenHandlerUser,
 	listLobby
 );
 module.exports = router;
