@@ -31,7 +31,11 @@ const lobbySchema = mongoose.Schema(
 			required: [
 				true,
 				"Please enter lobby status!"
-			]
+			],
+			enum: {
+				values: ['waiting', 'active', 'busy', 'complete'],
+				message: 'lstatus must be one of waiting, active, busy, complete'
+			}
 		},
 		lparticipants: {
 			type: [String],
