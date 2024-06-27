@@ -8,7 +8,7 @@ const Lobby = require("../models/lobbyModels");
 // @access private
 const startGame = asyncHandler(
 	async (req, res) => {
-		const { lid  } = req.body;
+		const { lid } = req.body;
 		const lobby = await Lobby.findById(lid);
 		if (!lobby) {
 			res.status(404);
@@ -18,7 +18,7 @@ const startGame = asyncHandler(
 			res.status(400);
 			throw new Error("Exactly 2 participants are required to start the game");
 		}
-		lobby.lstatus = 'active';
+		lobby.lstatus = 'busy';
 		await lobby.save();
 		const mcqs = await MCQ.find({ lid: lobby.lid });
 		const startTime = Date.now();
@@ -69,6 +69,13 @@ const getResult = asyncHandler(
 			res.status(404);
 			throw new Error("Winner not found");
 		}
+		const lobby = await Lobby.findOne({ lid: lid });
+		if (!lobby) {
+			res.status(404);
+			throw new Error("Lobby not found");
+		}
+		lobby.lstatus = 'complete';
+		await lobby.save();
 		res.status(200).json({ winnerName: user.username, winnerScore: game.wscore });
 	}
 );
