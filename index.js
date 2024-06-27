@@ -12,6 +12,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 app.use("/users", require("./routes/userRoutes"));
+app.use("/mcqs", require("./routes/mcqRoutes"));
 app.use("/lobbies", require("./routes/lobbyRoutes"));
 app.use("/games", require("./routes/gameRoutes"));
 app.use(errorHandler);
