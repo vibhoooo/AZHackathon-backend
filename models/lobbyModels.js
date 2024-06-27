@@ -35,7 +35,8 @@ const lobbySchema = mongoose.Schema(
 			enum: {
 				values: ['waiting', 'active', 'busy', 'complete'],
 				message: 'lstatus must be one of waiting, active, busy, complete'
-			}
+			},
+			default: 'waiting'
 		},
 		lparticipants: {
 			type: [String],
