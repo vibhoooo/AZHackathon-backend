@@ -6,8 +6,8 @@ const { getIo } = require("../socket");
 // @access private
 const createLobby = asyncHandler(
 	async (req, res) => {
-		const { lid, lname, lowneremail, lstatus, lparticipants } = req.body;
-		if (!lid || !lname || !lowneremail || !lstatus) {
+		const { lid, lname, lowneremail, lparticipants } = req.body;
+		if (!lid || !lname || !lowneremail) {
 			res.status(400);
 			throw new Error("Please provide all required fields");
 		}
@@ -16,8 +16,7 @@ const createLobby = asyncHandler(
 				lid,
 				lname,
 				lowneremail,
-				lstatus,
-				lparticipants: lparticipants || []
+				lparticipants: lparticipants && lparticipants.length ? lparticipants : []
 			});
 			const createdLobby = await newLobby.save();
 			res.status(201).json(createdLobby);
@@ -66,9 +65,15 @@ const addParticipant = asyncHandler(
 				res.status(404);
 				throw new Error("Lobby not found");
 			}
+			if (lobby.lstatus === 'busy') {
+				res.status(400).json({ message: "Lobby is busy, join request declined" });
+				return;
+			}
 			const io = getIo();
 			if (accept) {
+				if (!lobby.lparticipants) lobby.lparticipants = [];
 				lobby.lparticipants.push(participant);
+				lobby.lstatus = 'active';
 				const updatedLobby = await lobby.save();
 				io.to(participant).emit("joinResponse", { lobbyId: lid, accepted: true });
 				res.status(200).json(updatedLobby);
