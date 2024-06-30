@@ -13,19 +13,19 @@ router.route(
 );
 router.route(
 	"/readMcq"
-).post(
+).get(
 	validateTokenHandlerUser,
 	readMcq
 );
 router.route(
-	"/updateMcq/:id"
-).post(
+	"/updateMcq"
+).patch(
 	validateTokenHandlerUser,
 	updateMcq
 );
 router.route(
-	"/deleteMcq/:id"
-).post(
+	"/deleteMcq"
+).delete(
 	validateTokenHandlerUser,
 	deleteMcq
 );
