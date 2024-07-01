@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const { init } = require("./socket");
+const { init } = require("./utils/socket");
 const dotenv = require("dotenv").config();
 const connectDB = require("./config/dbConnection");
 connectDB();
