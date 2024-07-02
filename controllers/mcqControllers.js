@@ -41,12 +41,10 @@ const readMcq = asyncHandler(
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
-
 			if (!mcq) {
 				res.status(404);
 				throw new Error("MCQ not found");
 			}
-
 			res.status(200).json(mcq);
 		} catch (error) {
 			console.error(error);
@@ -96,7 +94,6 @@ const deleteMcq = asyncHandler(
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
-
 			if (!mcq) {
 				res.status(404);
 				throw new Error("MCQ not found");
