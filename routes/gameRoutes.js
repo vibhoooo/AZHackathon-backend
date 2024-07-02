@@ -21,7 +21,7 @@ router.route(
 );
 router.route(
 	"/getResult"
-).get(
+).post(
 	validateTokenHandlerUser,
 	apiLimiter,
 	getResult
