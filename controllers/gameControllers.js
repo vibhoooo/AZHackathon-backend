@@ -24,8 +24,8 @@ const startGame = asyncHandler(
 		}
 		lobby.lstatus = 'busy';
 		await lobby.save();
-		const mcqs = await MCQ.find({ lid });
-		if (!mcqs.length) {
+		const mcq = await MCQ.findOne({ lid }).sort({ createdAt: 1 });
+		if (!mcq) {
 			res.status(404);
 			throw new Error("No MCQs found for this lobby");
 		}
@@ -35,7 +35,9 @@ const startGame = asyncHandler(
 			lid
 		});
 		await newGame.save();
-		res.status(200).json({ game: newGame, mcqs, startTime });
+		const io = getIo();
+		io.to(`lobby-${lid}`).emit("gameStarted", { game: newGame, mcqs, startTime });
+		res.status(200).json({ message: "Game started", game: newGame, mcqs, startTime });
 	}
 );
 // @desc Submit Answer
@@ -67,7 +69,10 @@ const submitAnswer = asyncHandler(
 			game.wemail = userEmail;
 		}
 		await game.save();
-		res.status(200).json({ newScore });
+		const nextMCQ = await MCQ.findOne({ lid: lid, qid: { $gt: qid } }).sort({ qid: 1 });
+		const io = getIo();
+		io.to(userEmail).emit("answerSubmitted", { newScore, nextMCQ });
+		res.status(200).json({ message: `Answer submitted and next mcq sent to ${userEmail}`, newScore });
 	}
 );
 // @desc Get Result
@@ -97,7 +102,9 @@ const getResult = asyncHandler(
 		}
 		lobby.lstatus = 'complete';
 		await lobby.save();
-		res.status(200).json({ winnerName: user.username, winnerScore: game.wscore });
+		const io = getIo();
+		io.to(lid).emit("gameResult", { winnerName: user.username, winnerScore: game.wscore });
+		res.status(200).json({ message: "Game winner declared", winnerName: user.username, winnerScore: game.wscore });
 	}
 );
 module.exports = {
