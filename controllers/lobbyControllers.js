@@ -80,6 +80,8 @@ const addParticipant = asyncHandler(
 				lobby.lparticipants.push(participant);
 				lobby.lstatus = 'active';
 				const updatedLobby = await lobby.save();
+				const lobbyRoom = `lobby-${lid}`;
+				socket.join(lobbyRoom);
 				io.to(participant).emit("joinResponse", { lobbyId: lid, accepted: true });
 				res.status(200).json({ message: "Join request accepted", updatedLobby });
 			} else {
