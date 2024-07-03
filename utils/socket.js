@@ -8,6 +8,17 @@ module.exports = {
 				methods: ["GET", "POST"]
 			}
 		});
+		io.on("connection", (socket) => {
+			console.log("New client connected");
+			socket.on("disconnect", () => {
+				console.log("Client disconnected");
+			});
+			socket.on("joinLobby", (lobbyId) => {
+				const lobbyRoom = `lobby-${lobbyId}`;
+				socket.join(lobbyRoom);
+				console.log(`Socket joined ${lobbyRoom}`);
+			});
+		});
 		return io;
 	},
 	getIo: () => {
