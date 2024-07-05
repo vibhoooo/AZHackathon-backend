@@ -1,4 +1,6 @@
 const express = require("express");
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger-output.json')
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -7,14 +9,19 @@ const dotenv = require("dotenv").config();
 const connectDB = require("./config/dbConnection");
 connectDB();
 const errorHandler = require("./middlewares/errorHandler");
+const cacheMiddleware = require("./middlewares/cacheHandler");
+const morgan = require("morgan");
+app.use(morgan("dev"));
 const port = process.env.PORT;
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
+app.use(cacheMiddleware);
 app.use("/users", require("./routes/userRoutes"));
 app.use("/mcqs", require("./routes/mcqRoutes"));
 app.use("/lobbies", require("./routes/lobbyRoutes"));
 app.use("/games", require("./routes/gameRoutes"));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use(errorHandler);
 const io = init(server);
 io.on("connection", (socket) => {
