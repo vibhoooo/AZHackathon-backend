@@ -44,12 +44,18 @@ const readMcq = asyncHandler(
 			res.status(400);
 			throw new Error("Please provide both question ID (qid) and lobby ID (lid)");
 		}
+		const cacheKey = `mcq_${qid}_${lid}`;
+		const cachedMcq = req.cache.get(cacheKey);
+		if (cachedMcq) {
+			return res.status(200).json(cachedMcq);
+		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
 			if (!mcq) {
 				res.status(404);
 				throw new Error("MCQ not found");
 			}
+			req.cache.set(cacheKey, mcq);
 			res.status(200).json(mcq);
 		} catch (error) {
 			console.error(error);
@@ -80,6 +86,8 @@ const updateMcq = asyncHandler(
 			mcq.qscore = qscore;
 			mcq.qoptions = qoptions;
 			const updatedMcq = await mcq.save();
+			const cacheKey = `mcq_${qid}_${lid}`;
+			req.cache.del(cacheKey);
 			res.status(200).json(updatedMcq);
 		} catch (error) {
 			console.error(error);
@@ -104,6 +112,8 @@ const deleteMcq = asyncHandler(
 				throw new Error("MCQ not found");
 			}
 			await mcq.deleteOne();
+			const cacheKey = `mcq_${qid}_${lid}`;
+			req.cache.del(cacheKey);
 			res.status(200).json({ message: "MCQ deleted successfully" });
 		} catch (error) {
 			console.error(error);
