@@ -12,6 +12,11 @@ const createLobby = asyncHandler(
 			throw new Error("Please provide all required fields");
 		}
 		try {
+			const existingLobby = await Lobby.findOne({ lid });
+			if (existingLobby) {
+				res.status(400);
+				throw new Error("Lobby with the given ID already exists");
+			}
 			const newLobby = new Lobby({
 				lid,
 				lname,
