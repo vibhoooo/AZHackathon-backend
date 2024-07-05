@@ -68,6 +68,7 @@ const mcqSchema = mongoose.Schema(
 		timestamps: true
 	}
 );
+mcqSchema.index({ lid: 1, qid: 1 }, { unique: true });
 module.exports = mongoose.model(
 	"MCQ",
 	mcqSchema
