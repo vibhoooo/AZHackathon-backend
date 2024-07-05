@@ -85,6 +85,8 @@ const addParticipant = asyncHandler(
 				lobby.lparticipants.push(participant);
 				lobby.lstatus = 'active';
 				const updatedLobby = await lobby.save();
+				const cacheKey = "lobbies";
+				req.cache.del(cacheKey);
 				const lobbyRoom = `lobby-${lid}`;
 				socket.join(lobbyRoom);
 				io.to(participant).emit("joinResponse", { lobbyId: lid, accepted: true });
@@ -103,8 +105,14 @@ const addParticipant = asyncHandler(
 // @access private
 const listLobby = asyncHandler(
 	async (req, res) => {
+		const cacheKey = "lobbies";
+		const cachedLobbies = req.cache.get(cacheKey);
+		if (cachedLobbies) {
+			return res.status(200).json(cachedLobbies);
+		}
 		try {
 			const lobbies = await Lobby.find({});
+			req.cache.set(cacheKey, lobbies);
 			res.status(200).json(lobbies);
 		} catch (error) {
 			res.status(500).json({ message: "Failed to fetch lobbies", error: error.message });
