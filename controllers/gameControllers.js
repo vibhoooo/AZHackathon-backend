@@ -13,6 +13,11 @@ const startGame = asyncHandler(
 			res.status(400);
 			throw new Error("Game ID and Lobby ID are required");
 		}
+		const existingGame = await Game.findOne({ gid, lid });
+		if (existingGame) {
+			res.status(400);
+			throw new Error("A game with the given Game ID and Lobby ID already exists");
+		}
 		const lobby = await Lobby.findOne({ lid });
 		if (!lobby) {
 			res.status(404);
