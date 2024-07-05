@@ -28,6 +28,7 @@ const gameSchema = new mongoose.Schema(
 		timestamps: true
 	}
 );
+gameSchema.index({ gid: 1, lid: 1 }, { unique: true });
 module.exports = mongoose.model(
 	"Game",
 	gameSchema
