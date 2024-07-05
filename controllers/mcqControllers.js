@@ -11,6 +11,11 @@ const createMcq = asyncHandler(
 			throw new Error("Please provide all required fields");
 		}
 		try {
+			const existingMcq = await MCQ.findOne({ qid, lid });
+			if (existingMcq) {
+				res.status(400);
+				throw new Error("MCQ with the given QID and LID already exists");
+			}
 			const mcq = new MCQ({
 				qid,
 				qname,
