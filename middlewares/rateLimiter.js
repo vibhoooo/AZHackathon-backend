@@ -17,6 +17,7 @@ const apiLimiter = asyncHandler(
 			return next()
 		} 
 		if (result) {
+			let diff=currentTime - result["createdAt"];
 			if (diff > RATELIMIT_DURATION_IN_SECONDS) {
 				await redisClient.hset(userId, {
 					"createdAt": currentTime,
@@ -38,5 +39,4 @@ const apiLimiter = asyncHandler(
 		}
 	}
 );
-
 module.exports = apiLimiter;
