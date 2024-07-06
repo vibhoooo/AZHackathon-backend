@@ -10,12 +10,12 @@ const createMcq = asyncHandler(
 			res.status(400);
 			throw new Error("Please provide all required fields");
 		}
+		const existingMcq = await MCQ.findOne({ qid, lid });
+		if (existingMcq) {
+			res.status(400);
+			throw new Error("MCQ with the given QID and LID already exists");
+		}
 		try {
-			const existingMcq = await MCQ.findOne({ qid, lid });
-			if (existingMcq) {
-				res.status(400);
-				throw new Error("MCQ with the given QID and LID already exists");
-			}
 			const mcq = new MCQ({
 				qid,
 				qname,
@@ -27,15 +27,25 @@ const createMcq = asyncHandler(
 				qoptions
 			});
 			const createdMcq = await mcq.save();
-			res.status(201).json(createdMcq);
+			res.status(201).json(
+				{
+					qid,
+					qname,
+					qdiff,
+					qtopic,
+					qans,
+					qscore,
+					lid,
+					qoptions
+				}
+			);
 		} catch (error) {
-			console.error(error);
 			res.status(500).json({ message: 'Server error, unable to create MCQ' });
 		}
 	}
 );
 // @desc Read MCQ
-// @route GET /mcqs/readMcq
+// @route POST /mcqs/readMcq
 // @access private
 const readMcq = asyncHandler(
 	async (req, res) => {
@@ -47,7 +57,7 @@ const readMcq = asyncHandler(
 		const cacheKey = `mcq_${qid}_${lid}`;
 		const cachedMcq = req.cache.get(cacheKey);
 		if (cachedMcq) {
-			return res.status(200).json(cachedMcq);
+			return res.status(200).json( {cachedMcq} );
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
@@ -56,9 +66,8 @@ const readMcq = asyncHandler(
 				throw new Error("MCQ not found");
 			}
 			req.cache.set(cacheKey, mcq);
-			res.status(200).json(mcq);
+			res.status(200).json( {mcq} );
 		} catch (error) {
-			console.error(error);
 			res.status(500).json({ message: 'Server error, unable to read MCQ' });
 		}
 	}
@@ -90,7 +99,6 @@ const updateMcq = asyncHandler(
 			req.cache.del(cacheKey);
 			res.status(200).json(updatedMcq);
 		} catch (error) {
-			console.error(error);
 			res.status(500).json({ message: 'Server error, unable to update MCQ' });
 		}
 	}
@@ -116,7 +124,6 @@ const deleteMcq = asyncHandler(
 			req.cache.del(cacheKey);
 			res.status(200).json({ message: "MCQ deleted successfully" });
 		} catch (error) {
-			console.error(error);
 			res.status(500).json({ message: 'Server error, unable to delete MCQ' });
 		}
 	}
