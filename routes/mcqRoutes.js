@@ -15,7 +15,7 @@ router.route(
 );
 router.route(
 	"/readMcq"
-).get(
+).post(
 	validateTokenHandlerUser,
 	apiLimiter,
 	readMcq
