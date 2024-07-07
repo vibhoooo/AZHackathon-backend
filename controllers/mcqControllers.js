@@ -61,12 +61,13 @@ const readMcq = asyncHandler(
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
-			if (!mcq) {
-				res.status(404);
-				throw new Error("MCQ not found");
+			if(mcq) {
+				req.cache.set(cacheKey, mcq);
+				res.status(200).json({ mcq });
 			}
-			req.cache.set(cacheKey, mcq);
-			res.status(200).json( {mcq} );
+			else {
+				res.status(404).json({ message: 'MCQ not found' });
+			}
 		} catch (error) {
 			res.status(500).json({ message: 'Server error, unable to read MCQ' });
 		}
@@ -84,20 +85,21 @@ const updateMcq = asyncHandler(
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
-			if (!mcq) {
-				res.status(404);
-				throw new Error("MCQ not found");
+			if(mcq) {
+				mcq.qname = qname;
+				mcq.qdiff = qdiff;
+				mcq.qtopic = qtopic;
+				mcq.qans = qans;
+				mcq.qscore = qscore;
+				mcq.qoptions = qoptions;
+				const updatedMcq = await mcq.save();
+				const cacheKey = `mcq_${qid}_${lid}`;
+				req.cache.del(cacheKey);
+				res.status(200).json({updatedMcq});
 			}
-			mcq.qname = qname;
-			mcq.qdiff = qdiff;
-			mcq.qtopic = qtopic;
-			mcq.qans = qans;
-			mcq.qscore = qscore;
-			mcq.qoptions = qoptions;
-			const updatedMcq = await mcq.save();
-			const cacheKey = `mcq_${qid}_${lid}`;
-			req.cache.del(cacheKey);
-			res.status(200).json(updatedMcq);
+			else {
+				res.status(404).json({ message: 'MCQ not found' });
+			}
 		} catch (error) {
 			res.status(500).json({ message: 'Server error, unable to update MCQ' });
 		}
@@ -115,14 +117,15 @@ const deleteMcq = asyncHandler(
 		}
 		try {
 			const mcq = await MCQ.findOne({ qid, lid });
-			if (!mcq) {
-				res.status(404);
-				throw new Error("MCQ not found");
+			if(mcq) {
+				await mcq.deleteOne();
+				const cacheKey = `mcq_${qid}_${lid}`;
+				req.cache.del(cacheKey);
+				res.status(200).json({ message: "MCQ deleted successfully" });
 			}
-			await mcq.deleteOne();
-			const cacheKey = `mcq_${qid}_${lid}`;
-			req.cache.del(cacheKey);
-			res.status(200).json({ message: "MCQ deleted successfully" });
+			else {
+				res.status(404).json({ message: 'MCQ not found' });
+			}
 		} catch (error) {
 			res.status(500).json({ message: 'Server error, unable to delete MCQ' });
 		}
