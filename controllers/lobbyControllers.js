@@ -11,12 +11,12 @@ const createLobby = asyncHandler(
 			res.status(400);
 			throw new Error("Please provide all required fields");
 		}
+		const existingLobby = await Lobby.findOne({ lid });
+		if (existingLobby) {
+			res.status(400);
+			throw new Error("Lobby with the given ID already exists");
+		}
 		try {
-			const existingLobby = await Lobby.findOne({ lid });
-			if (existingLobby) {
-				res.status(400);
-				throw new Error("Lobby with the given ID already exists");
-			}
 			const newLobby = new Lobby({
 				lid,
 				lname,
@@ -26,7 +26,6 @@ const createLobby = asyncHandler(
 			const createdLobby = await newLobby.save();
 			res.status(201).json(createdLobby);
 		} catch (error) {
-			console.error(error);
 			res.status(400).json({ message: error.message });
 		}
 	}
@@ -41,21 +40,20 @@ const requestJoinLobby = asyncHandler(
 			res.status(400);
 			throw new Error("Please provide lobby ID and participant");
 		}
+		const lobby = await Lobby.findOne({ lid });
+		if (!lobby) {
+			res.status(404);
+			throw new Error("Lobby not found");
+		}
+		if (lobby.lstatus === 'busy') {
+			res.status(403);
+			throw new Error("Lobby is currently busy. Join request cannot be sent.");
+		}
 		try {
-			const lobby = await Lobby.findOne({ lid });
-			if (!lobby) {
-				res.status(404);
-				throw new Error("Lobby not found");
-			}
-			if (lobby.lstatus === 'busy') {
-				res.status(403);
-				throw new Error("Lobby is currently busy. Join request cannot be sent.");
-			}
 			const io = getIo();
 			io.to(lobby.lowneremail).emit("joinRequest", { lobbyId: lid, participant });
 			res.status(200).json({ message: "Join request sent to lobby owner" });
 		} catch (error) {
-			console.error(error);
 			res.status(400).json({ message: error.message });
 		}
 	}
@@ -70,16 +68,16 @@ const addParticipant = asyncHandler(
 			res.status(400);
 			throw new Error("Please provide lobby ID, participant, and acceptance status");
 		}
+		const lobby = await Lobby.findOne({ lid });
+		if (!lobby) {
+			res.status(404);
+			throw new Error("Lobby not found");
+		}
+		if (lobby.lstatus === 'busy') {
+			res.status(400).json({ message: "Lobby is busy, join request declined" });
+			return;
+		}
 		try {
-			const lobby = await Lobby.findOne({ lid });
-			if (!lobby) {
-				res.status(404);
-				throw new Error("Lobby not found");
-			}
-			if (lobby.lstatus === 'busy') {
-				res.status(400).json({ message: "Lobby is busy, join request declined" });
-				return;
-			}
 			const io = getIo();
 			if (accept) {
 				lobby.lparticipants.push(participant);
@@ -88,7 +86,7 @@ const addParticipant = asyncHandler(
 				const cacheKey = "lobbies";
 				req.cache.del(cacheKey);
 				const lobbyRoom = `lobby-${lid}`;
-				socket.join(lobbyRoom);
+				io.to(participant).emit("joinRoom", { lobbyRoom });
 				io.to(participant).emit("joinResponse", { lobbyId: lid, accepted: true });
 				res.status(200).json({ message: "Join request accepted", updatedLobby });
 			} else {
