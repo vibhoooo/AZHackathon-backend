@@ -114,7 +114,6 @@ describe('MCQ Controllers', () => {
 			const res = await request(app)
 				.post('/mcqs/readMcq')
 				.send({ qid: '1', lid: '1' });
-				console.log(res.body);
 			expect(res.statusCode).toEqual(404);
 		});
 	});
