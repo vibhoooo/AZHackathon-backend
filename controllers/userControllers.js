@@ -106,6 +106,7 @@ const loginUser = asyncHandler(
 				)
 				.json(
 					{
+						email,
 						accessToken,
 						role: "User"
 					}
