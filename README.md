@@ -30,7 +30,7 @@ Socket.IO-based lobby system for a real-time multiplayer MCQ battle engine for A
 • Wrote unit tests using Jest and Supertest for backend endpoints, achieving test coverage of 93.4%. <br />
 • Implemented Open API/Swagger specs for backend APIs, achieving comprehensive API documentation with 100% endpoint coverage and precise parameter definitions at 95% accuracy.
 
-### Some Results 
+## Some Results 
 Clustering <br />
 <img width="751" alt="image" src="https://github.com/vibhoooo/AZHackathon-backend/assets/96656912/375e47e8-ae87-4429-b42a-cc93131395b5"> <br />
 
