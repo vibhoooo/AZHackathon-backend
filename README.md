@@ -137,4 +137,4 @@ OpenAPI/Swagger specs <br />
 • Replicating the database.
 
 ## Links
-[Frontend Repository](https://drive.google.com/file/d/1AYf9sR1Auh-w-6Mz5BiYJheDroCbp3fa/view)
+[Frontend Repository](https://github.com/vibhoooo/AZHackathon-frontend)
