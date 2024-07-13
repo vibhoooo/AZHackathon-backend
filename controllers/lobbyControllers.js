@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Lobby = require("../models/lobbyModels");
-const { getIo } = require("../utils/socket");
+// const { getIo, lobbyOwnerSockets } = require("../utils/socket");
+const pusher = require("../pusherConfig");
 // @desc Create lobby
 // @route POST /lobbies/createLobby
 // @access private
@@ -24,6 +25,8 @@ const createLobby = asyncHandler(
 				lparticipants: [lowneremail]
 			});
 			const createdLobby = await newLobby.save();
+			const triggerResult = await pusher.trigger('presence-' + `lobby-${lid}`, 'joinLobbyOwner', { lowneremail });
+			console.log('Pusher trigger result:', triggerResult);
 			res.status(201).json(createdLobby);
 		} catch (error) {
 			res.status(400).json({ message: error.message });
@@ -50,8 +53,16 @@ const requestJoinLobby = asyncHandler(
 			throw new Error("Lobby is currently busy. Join request cannot be sent.");
 		}
 		try {
-			const io = getIo();
-			io.to(lobby.lowneremail).emit("joinRequest", { lobbyId: lid, participant });
+			// const io = getIo();
+			// const ownerSocketId = lobbyOwnerSockets[lid];
+			// if (ownerSocketId) {
+			// 	io.to(ownerSocketId).emit("joinRequestNot", { lobbyId: lid, participant });
+			// 	res.status(200).json({ message: "Join request sent to lobby owner", ownerSocketId: ownerSocketId });
+			// } else {
+			// 	res.status(404).json({ message: "Lobby owner not found" });
+			// }
+			const triggerResult = await pusher.trigger('presence-' + `lobby-${lid}`, 'join-request', { participant });
+			console.log('Pusher trigger result:', triggerResult);
 			res.status(200).json({ message: "Join request sent to lobby owner" });
 		} catch (error) {
 			res.status(400).json({ message: error.message });

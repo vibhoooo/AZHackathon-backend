@@ -16,8 +16,8 @@ router.route(
 router.route(
 	"/requestJoinLobby"
 ).post(
-	validateTokenHandlerUser,
-	apiLimiter,
+	// validateTokenHandlerUser,
+	// apiLimiter,
 	requestJoinLobby
 );
 router.route(
