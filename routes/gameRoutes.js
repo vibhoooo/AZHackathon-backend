@@ -8,8 +8,8 @@ const { getResult } = require("../controllers/gameControllers");
 router.route(
 	"/startGame"
 ).post(
-	validateTokenHandlerUser,
-	apiLimiter,
+	// validateTokenHandlerUser,
+	// apiLimiter,
 	startGame
 );
 router.route(

@@ -3,6 +3,7 @@ const Game = require("../models/gameModels");
 const User = require("../models/userModels");
 const MCQ = require("../models/mcqModels");
 const Lobby = require("../models/lobbyModels");
+const { io } = require("../index.js");
 // @desc Start game
 // @route POST /games/startGame
 // @access private
@@ -34,15 +35,12 @@ const startGame = asyncHandler(
 			res.status(404);
 			throw new Error("No MCQs found for this lobby");
 		}
-		const startTime = new Date().toISOString();
 		const newGame = new Game({
 			gid,
 			lid
 		});
 		await newGame.save();
-		const io = getIo();
-		io.to(`lobby-${lid}`).emit("gameStarted", { game: newGame, mcqs, startTime });
-		res.status(200).json({ message: "Game started", game: newGame, mcqs, startTime });
+		res.status(200).json({ message: "Game started", game: newGame, mcq});
 	}
 );
 // @desc Submit Answer
