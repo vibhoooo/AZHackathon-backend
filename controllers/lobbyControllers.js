@@ -20,7 +20,7 @@ const createLobby = asyncHandler(
 				lid,
 				lname,
 				lowneremail,
-				lparticipants: [lowneremail]
+				lparticipants: []
 			});
 			const createdLobby = await newLobby.save();
 			res.status(201).json(createdLobby);
@@ -103,14 +103,14 @@ const addParticipant = asyncHandler(
 // @access private
 const listLobby = asyncHandler(
 	async (req, res) => {
-		const cacheKey = "lobbies";
-		const cachedLobbies = req.cache.get(cacheKey);
-		if (cachedLobbies) {
-			return res.status(200).json(cachedLobbies);
-		}
+		// const cacheKey = "lobbies";
+		// const cachedLobbies = req.cache.get(cacheKey);
+		// if (cachedLobbies) {
+		// 	return res.status(200).json(cachedLobbies);
+		// }
 		try {
 			const lobbies = await Lobby.find({});
-			req.cache.set(cacheKey, lobbies);
+			// req.cache.set(cacheKey, lobbies);
 			res.status(200).json(lobbies);
 		} catch (error) {
 			res.status(500).json({ message: "Failed to fetch lobbies", error: error.message });

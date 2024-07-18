@@ -42,7 +42,7 @@ const startGame = asyncHandler(
 		await newGame.save();
 		res.status(200).json({ message: "Game started", game: newGame, mcq});
 	}
-);
+)
 // @desc Submit Answer
 // @route POST /games/submitAnswer
 // @access private
@@ -73,8 +73,8 @@ const submitAnswer = asyncHandler(
 		}
 		await game.save();
 		const nextMCQ = await MCQ.findOne({ lid: lid, qid: { $gt: qid } }).sort({ qid: 1 });
-		const io = getIo();
-		io.to(userEmail).emit("answerSubmitted", { newScore, nextMCQ });
+		// const io = getIo();
+		// io.to(userEmail).emit("answerSubmitted", { newScore, nextMCQ });
 		res.status(200).json({ message: `Answer submitted and next mcq sent to ${userEmail}`, newScore });
 	}
 );
@@ -105,8 +105,8 @@ const getResult = asyncHandler(
 		}
 		lobby.lstatus = 'complete';
 		await lobby.save();
-		const io = getIo();
-		io.to(lid).emit("gameResult", { winnerName: user.username, winnerScore: game.wscore });
+		// const io = getIo();
+		// io.to(lid).emit("gameResult", { winnerName: user.username, winnerScore: game.wscore });
 		res.status(200).json({ message: "Game winner declared", winnerName: user.username, winnerScore: game.wscore });
 	}
 );

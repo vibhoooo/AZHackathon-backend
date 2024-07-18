@@ -43,9 +43,9 @@ io.on("connection", (socket) => {
 	// 	socket.to(`lobby-${lobbyId}`).emit("firstMcq", { game, mcq, startTime });
 	// });
 	socket.on("gameStarted", (data) => {
-		const { lobbyId, message } = data;
+		const { lobbyId, message, mcq } = data;
 		console.log("Game started");
-		socket.to(`lobby-${lobbyId}`).emit("firstMcq", { message });
+		socket.to(`lobby-${lobbyId}`).emit("firstMcq", { message, mcq });
 	});
 });
 const dotenv = require("dotenv").config();
