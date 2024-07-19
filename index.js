@@ -12,36 +12,11 @@ const io = new Server(server, {
 	},
 });
 io.on("connection", (socket) => {
-	// socket.on("joinLobbyOwner", (data) => {
-	// 	const { lobbyId, ownerEmail } = data;
-	// 	console.log(`Lobby owner ${ownerEmail} created lobby ${lobbyId}`);
-	// 	socket.join(`lobby-${lobbyId}`);
-	// });
-	// socket.on("joinRequest", (data) => {
-	// 	const { lobbyId, participant } = data;
-	// 	console.log(`New participant ${participant} joined lobby ${lobbyId}`);
-	// 	socket.join(`lobby-${lobbyId}`);
-	// 	socket.to(`lobby-${lobbyId}`).emit("joinRequest-not", data);
-	// });
-	// socket.on("sendPrivateMessage", (data) => {
-	// 	const { lobbyId, targetEmail } = data;
-	// 	console.log(`Submission received by participant ${targetEmail} of lobby ${lobbyId}`);
-	// 	socket.emit("privateMessage", { lobbyId, targetEmail });
-	// });
-	// socket.on("refresh", (data) => {
-	// 	const { lobbyId, ownerEmail } = data;
-	// 	socket.join(`lobby-${lobbyId}`);
-	// });
 	socket.on("joinLobby", (data) => {
 		const { lobbyId, participant } = data;
 		console.log(`New participant ${participant} joined lobby ${lobbyId}`);
 		socket.join(`lobby-${lobbyId}`);
 	}); 
-	// socket.on("gameStarted", (data) => {
-	// 	const { game, mcq, startTime } = data;
-	// 	console.log("Game started");
-	// 	socket.to(`lobby-${lobbyId}`).emit("firstMcq", { game, mcq, startTime });
-	// });
 	socket.on("gameStarted", (data) => {
 		const { lobbyId, mcq } = data;
 		console.log("Game started");
@@ -79,4 +54,3 @@ app.use(errorHandler);
 server.listen(port, () => {
 	console.log(`Server running on port ${port} and cluster ${process.pid}`);
 });
-module.exports = { io };

@@ -73,8 +73,6 @@ const submitAnswer = asyncHandler(
 		}
 		await game.save();
 		const nextMCQ = await MCQ.findOne({ lid: lid, qid: { $gt: qid } }).sort({ qid: 1 });
-		// const io = getIo();
-		// io.to(userEmail).emit("answerSubmitted", { newScore, nextMCQ });
 		res.status(200).json({ message: `Answer submitted and next mcq sent to ${userEmail}`, newScore, nextMCQ });
 	}
 );
@@ -105,8 +103,6 @@ const getResult = asyncHandler(
 		}
 		lobby.lstatus = 'complete';
 		await lobby.save();
-		// const io = getIo();
-		// io.to(lid).emit("gameResult", { winnerName: user.username, winnerScore: game.wscore });
 		res.status(200).json({ message: "Game winner declared to everyone", winnerName: user.username, winnerScore: game.wscore });
 	}
 );
