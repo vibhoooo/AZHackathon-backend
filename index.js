@@ -53,9 +53,9 @@ io.on("connection", (socket) => {
 		socket.emit("newScoreAndMcq", { newScore, nextMcq });
 	});
 	socket.on("gameFinished", (data) => {
-		const { winnerName, winnerScore } = data;
+		const { lobbyId, winnerName, winnerScore } = data;
 		console.log("Game finsihed");
-		socket.emit("gameFinished", { winnerName, winnerScore });
+		socket.to(`lobby-${lobbyId}`).emit("gameFinished", { winnerName, winnerScore });
 	});
 });
 const dotenv = require("dotenv").config();

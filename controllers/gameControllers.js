@@ -107,7 +107,7 @@ const getResult = asyncHandler(
 		await lobby.save();
 		// const io = getIo();
 		// io.to(lid).emit("gameResult", { winnerName: user.username, winnerScore: game.wscore });
-		res.status(200).json({ message: "Game winner declared", winnerName: user.username, winnerScore: game.wscore });
+		res.status(200).json({ message: "Game winner declared to everyone", winnerName: user.username, winnerScore: game.wscore });
 	}
 );
 module.exports = {
