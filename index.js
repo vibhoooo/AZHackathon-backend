@@ -43,9 +43,19 @@ io.on("connection", (socket) => {
 	// 	socket.to(`lobby-${lobbyId}`).emit("firstMcq", { game, mcq, startTime });
 	// });
 	socket.on("gameStarted", (data) => {
-		const { lobbyId, message, mcq } = data;
+		const { lobbyId, mcq } = data;
 		console.log("Game started");
-		socket.to(`lobby-${lobbyId}`).emit("firstMcq", { message, mcq });
+		socket.to(`lobby-${lobbyId}`).emit("firstMcq", { mcq });
+	});
+	socket.on("submissionReceived", (data) => {
+		const { newScore, nextMcq } = data;
+		console.log("Submission received");
+		socket.emit("newScoreAndMcq", { newScore, nextMcq });
+	});
+	socket.on("gameFinished", (data) => {
+		const { winnerName, winnerScore } = data;
+		console.log("Game finsihed");
+		socket.emit("gameFinished", { winnerName, winnerScore });
 	});
 });
 const dotenv = require("dotenv").config();
