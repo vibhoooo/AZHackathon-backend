@@ -40,7 +40,7 @@ const startGame = asyncHandler(
 			lid
 		});
 		await newGame.save();
-		res.status(200).json({ message: "Game started", game: newGame, mcq});
+		res.status(200).json({ message: "Game started and first mcq sent to everyone", game: newGame, mcq });
 	}
 )
 // @desc Submit Answer
@@ -75,7 +75,7 @@ const submitAnswer = asyncHandler(
 		const nextMCQ = await MCQ.findOne({ lid: lid, qid: { $gt: qid } }).sort({ qid: 1 });
 		// const io = getIo();
 		// io.to(userEmail).emit("answerSubmitted", { newScore, nextMCQ });
-		res.status(200).json({ message: `Answer submitted and next mcq sent to ${userEmail}`, newScore });
+		res.status(200).json({ message: `Answer submitted and next mcq sent to ${userEmail}`, newScore, nextMCQ });
 	}
 );
 // @desc Get Result
