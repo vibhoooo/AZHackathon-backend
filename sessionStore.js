@@ -1,19 +1,19 @@
-// class InMemorySessionStore {
-// 	constructor() {
-// 		this.sessions = new Map();
-// 	}
+class InMemorySessionStore {
+	constructor() {
+		this.sessions = new Map();
+	}
 
-// 	findSession(id) {
-// 		return this.sessions.get(id);
-// 	}
+	findSession(id) {
+		return this.sessions.get(id);
+	}
 
-// 	saveSession(id, session) {
-// 		this.sessions.set(id, session);
-// 	}
+	saveSession(id, session) {
+		this.sessions.set(id, session);
+	}
 
-// 	findAllSessions() {
-// 		return [...this.sessions.values()];
-// 	}
-// }
+	findAllSessions() {
+		return [...this.sessions.values()];
+	}
+}
 
-// module.exports = { InMemorySessionStore };
+module.exports = { InMemorySessionStore };
