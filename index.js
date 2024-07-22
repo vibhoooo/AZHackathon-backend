@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
 	socket.on("gameFinished", (data) => {
 		const { lobbyId, winnerName, winnerScore } = data;
 		console.log("Game finsihed");
-		socket.to(`lobby-${lobbyId}`).emit("gameFinished", { winnerName, winnerScore });
+		socket.to(`lobby-${lobbyId}`).emit("winnerDeclared", { winnerName, winnerScore });
 	});
 });
 const dotenv = require("dotenv").config();
@@ -54,3 +54,5 @@ app.use(errorHandler);
 server.listen(port, () => {
 	console.log(`Server running on port ${port} and cluster ${process.pid}`);
 });
+
+

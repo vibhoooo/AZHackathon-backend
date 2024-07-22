@@ -10,28 +10,28 @@ router.route(
 	"/createLobby"
 ).post(
 	validateTokenHandlerUser,
-	apiLimiter,
+	// apiLimiter,
 	createLobby
 );
 router.route(
 	"/requestJoinLobby"
 ).post(
-	validateTokenHandlerUser,
-	apiLimiter,
+	// validateTokenHandlerUser,
+	// apiLimiter,
 	requestJoinLobby
 );
 router.route(
 	"/addParticipant"
 ).post(
 	validateTokenHandlerUser,
-	apiLimiter,
+	// apiLimiter,
 	addParticipant
 );
 router.route(
 	"/listLobby"
 ).get(
 	validateTokenHandlerUser,
-	apiLimiter,
+	// apiLimiter,
 	listLobby
 );
 module.exports = router;

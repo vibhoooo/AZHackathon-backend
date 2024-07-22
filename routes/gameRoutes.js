@@ -8,22 +8,22 @@ const { getResult } = require("../controllers/gameControllers");
 router.route(
 	"/startGame"
 ).post(
-	validateTokenHandlerUser,
-	apiLimiter,
+	// validateTokenHandlerUser,
+	// apiLimiter,
 	startGame
 );
 router.route(
 	"/submitAnswer"
 ).post(
 	validateTokenHandlerUser,
-	apiLimiter,
+	// apiLimiter,
 	submitAnswer
 );
 router.route(
 	"/getResult"
 ).post(
 	validateTokenHandlerUser,
-	apiLimiter,
+	// apiLimiter,
 	getResult
 );
 module.exports = router;
