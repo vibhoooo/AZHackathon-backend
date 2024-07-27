@@ -4,7 +4,7 @@ Socket.IO-based lobby system for a real-time multiplayer MCQ battle engine for A
 ## Tech Stack
 • NodeJS <br />
 • ExpressJS  <br />
-• SockJS  <br />
+• Socket.IO  <br />
 • MomentJS <br />
 • Morgan <br />
 • Jest <br />
