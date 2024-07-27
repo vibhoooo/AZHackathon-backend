@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validateTokenHandlerUser = require("../middlewares/validateTokenHandlerUser");
-const apiLimiter = require("../middlewares/rateLimiter");
+// const apiLimiter = require("../middlewares/rateLimiter");
 const { createLobby } = require("../controllers/lobbyControllers");
 const { requestJoinLobby } = require("../controllers/lobbyControllers");
 const { addParticipant } = require("../controllers/lobbyControllers");

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validateTokenHandlerUser = require("../middlewares/validateTokenHandlerUser");
-const apiLimiter = require("../middlewares/rateLimiter");
+// const apiLimiter = require("../middlewares/rateLimiter");
 const { startGame } = require("../controllers/gameControllers");
 const { submitAnswer } = require("../controllers/gameControllers");
 const { getResult } = require("../controllers/gameControllers");
