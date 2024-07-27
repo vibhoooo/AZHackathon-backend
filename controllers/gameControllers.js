@@ -3,7 +3,6 @@ const Game = require("../models/gameModels");
 const User = require("../models/userModels");
 const MCQ = require("../models/mcqModels");
 const Lobby = require("../models/lobbyModels");
-const { io } = require("../index.js");
 // @desc Start game
 // @route POST /games/startGame
 // @access private
